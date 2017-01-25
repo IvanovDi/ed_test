@@ -1,46 +1,37 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\User;
-
 class UserController extends Controller
 {
     public function show()
     {
-        dd($this->getTree());
-        return $this->getTree();
+        $data = $this->getTree();
+        return view('laravel_test.show', ['data' => $data]);
     }
-
     public function getTree($id=null)
     {
         $result = [];
-        $Users = $this->getArray($id);
-        foreach ($Users as $user) {
+        $users = $this->getArrayUsers($id);
+        foreach ($users as $user) {
             $result[$user['id']]['name'] = $user['name'];
             foreach ($user['subordinate_groups'] as $subordinateGroup) {
-                $subordinatesGroups = [];
+                $subordinatesGroupUsers = [];
                 foreach ($subordinateGroup['users'] as $item) {
-                    $subordinatesGroups[$item['id']]['name'] = $item['name'];
-                    foreach ($item['subordinates'] as $subordinate) {
-
-                        $subordinatesGroups[$item['id']]['subordinates'] = $this->getTree($subordinate['id']);
-                    }
+                    $subordinatesGroupUsers[$item['id']]['name'] = $item['name'];
+                    $subordinatesGroupUsers[$item['id']]['subordinates'] = $this->getTree($item['id']);
                 }
                 $result[$user['id']]['groups'][$subordinateGroup['id']] = [
                     'name' => $subordinateGroup['name'],
-                    'users' => $subordinatesGroups
+                    'users' => $subordinatesGroupUsers
                 ];
             }
             $result[$user['id']]['subordinates'] = $this->getTree($user['id']);
         }
         return $result;
     }
-
-    public function getArray($id)
+    public function getArrayUsers($id)
     {
-        static $result;
         if(!isset($result[$id])) {
             $result[$id] = User::where('head_user_id', $id)->with('subordinateGroups.users.subordinates')->get()->toArray();
         }
