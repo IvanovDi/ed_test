@@ -9,6 +9,7 @@ class UserController extends Controller
 {
     public function show()
     {
+        dd($this->getTree());
         return $this->getTree();
     }
 
@@ -24,7 +25,6 @@ class UserController extends Controller
                     $subordinatesGroups[$item['id']]['name'] = $item['name'];
                     foreach ($item['subordinates'] as $subordinate) {
 
-                        dd($this->getTree($subordinate['id']));
                         $subordinatesGroups[$item['id']]['subordinates'] = $this->getTree($subordinate['id']);
                     }
                 }
@@ -35,7 +35,6 @@ class UserController extends Controller
             }
             $result[$user['id']]['subordinates'] = $this->getTree($user['id']);
         }
-        dd($result);
         return $result;
     }
 
