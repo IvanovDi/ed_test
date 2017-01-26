@@ -17,6 +17,6 @@ class Group extends Model
 
     public function headGroupUser()
     {
-        return $this->belongsTo(User::class, 'head_user_id');
+        return $this->belongsTo(User::class, 'head_users_id');
     }
 }

@@ -7,7 +7,7 @@
                         <li>
                             Group - {{$group['name']}}
                             @if(isset($group['users']))
-                            @include('laravel_test.showTree', ['data' => $item['subordinates']])
+                                @include('laravel_test.showTree', ['data' => $item['subordinates']])
                             @endif
                         </li>
                     </ul>

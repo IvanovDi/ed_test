@@ -6,9 +6,12 @@ class UserController extends Controller
 {
     public function show()
     {
+        \DB::enableQueryLog();
         $data = $this->getTree();
+//        dd(\DB::getQueryLog());
         return view('laravel_test.show', ['data' => $data]);
     }
+
     public function getTree($id=null)
     {
         $result = [];
@@ -30,8 +33,10 @@ class UserController extends Controller
         }
         return $result;
     }
+
     public function getArrayUsers($id)
     {
+        static $result = [];
         if(!isset($result[$id])) {
             $result[$id] = User::where('head_user_id', $id)->with('subordinateGroups.users.subordinates')->get()->toArray();
         }

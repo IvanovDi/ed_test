@@ -11,7 +11,9 @@
 |
 */
 
-Route::get('/', 'UserController@show');
+Route::get('/', [
+    'uses' => 'UserController@show',
+]);
 
 Auth::routes();
 
